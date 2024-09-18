@@ -199,16 +199,3 @@ function round(num){
         return num;
     }
 }
-
-function isOpNull(){
-    return operator === null ? true : false; 
-}
-
-function updateFirstNum(e){
-    firstNum += e;
-    updateDisplay(firstNum);
-}
-
-function updateDisplay(text){
-    display.innerText = text;
-}
