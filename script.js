@@ -1,7 +1,7 @@
 let firstNum = '';
 let secondNum = '';
 let operator = null;
-let isCalc = false; //True if we are in a chain of calculations
+let chain = false; //True if we are in a chain of calculations
 
 //Add even listener to all buttons which returns text inside button when clicked
 const btnList = document.querySelectorAll('button');
@@ -20,7 +20,7 @@ function btnClick(e) {
         if (operator === null){
             //isCalc checks if we are in a chain or if no prior calculations have been done
             //If true, we must clear calculator to continue, otherwise we will attempt to change firstNum when it is not empty and not needing to be changed
-            if(isCalc){
+            if(chain){
                 clear();
             }
             //Checks and disallows for starting numbers with 0 (ex. 001) and multiple '.' (ex. 1.02.3)
@@ -29,8 +29,8 @@ function btnClick(e) {
             //All conditions for assigning or addending firstNum satisfied
             }else {
                 //Checks and adds 0 infront of empty '.'(ex. 0.1 for readability)
-                if(firstNum === '' && e === '.'){
-                    firstNum = '0';
+                if(firstNum === '' && e === '.' || firstNum === '-' && e === '.'){
+                    firstNum += '0';
                 }
                 //Add to end of firstNum
                 firstNum += e;
@@ -40,8 +40,8 @@ function btnClick(e) {
         //Checks for double '.' in secondNum
         }else if(!secondNum.includes('.') || e !== '.'){
             //Checks and adds 0 infront of empty '.'(ex. 0.1 for readability)
-            if(secondNum === '' && e === '.'){
-                secondNum = '0';
+            if(secondNum === '' && e === '.' || secondNum === '-' && e === '.'){
+                secondNum += '0';
             }
             //Add to end of secondNum 
             secondNum += e;
@@ -53,7 +53,7 @@ function btnClick(e) {
         }
     //When button text is not integer or '.' we move into else
     }else{
-        //Switch check for 'C' and '=', all other inputs are operators which are handled by operate()
+        //Switch check for 'C' and '=', all other remaining inputs are operators which are handled by operate()
         switch(e) {
             case 'C':
                 clear();
@@ -67,13 +67,35 @@ function btnClick(e) {
                     operate(firstNum, secondNum, operator);
                     break;
                 }
+            //'-' can be both operator and negative symbol. As such it needs to be handled with specific criteria
+            case '-':
+                if (firstNum === '' && operator === null){
+                    firstNum += e;
+                    display.textContent = firstNum;
+                    break;
+                }else if(operator !== null && secondNum === ''){
+                    secondNum += e;
+                    display.textContent = secondNum;
+                    break;
+                }else if(firstNum !== '' && operator === null){
+                    operator = e;
+                    flicker();
+                    break;
+                }else if(firstNum !== '' && operator !== null && secondNum !== ''){
+                    operate(firstNum, secondNum, operator);
+                    operator = e; //Operator value needs to be reassigned to continue chain calculations
+                    break;
+                }else{
+                    flicker();
+                    break;
+                }
             //All default buttons are operators
             default:
                 //Checks if operator variable is assigned and first num is empty
                 //If true it will update the operator to the selected button text
                 if(operator === null && firstNum !== ''){
                     operator = e;
-                    display.innerText = e;
+                    flicker();
                     break;
                 //If all variables are assigned it will calculate instead
                 }else if(operator !== null && firstNum !== '' && secondNum !== ''){
@@ -93,7 +115,7 @@ function operate(numOne, numTwo, op){
     numOne = parseFloat(numOne);
     numTwo = parseFloat(numTwo);
     //Switch determines which operation will occur
-    //All operations move result into firstNum and clear other variables for chain calculation
+    //All operations move result into firstNum and clear other variables to allow chain calculation
     switch (op){
         case '*':
             firstNum = round(numOne * numTwo);
@@ -176,4 +198,17 @@ function round(num){
         num = roundToDecimals(num, 15 - intLength);//rounds the number to a length of 15
         return num;
     }
+}
+
+function isOpNull(){
+    return operator === null ? true : false; 
+}
+
+function updateFirstNum(e){
+    firstNum += e;
+    updateDisplay(firstNum);
+}
+
+function updateDisplay(text){
+    display.innerText = text;
 }
