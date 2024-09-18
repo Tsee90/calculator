@@ -18,7 +18,7 @@ function btnClick(e) {
         //If operator is null, then we proceed with assigning firstNum variable
         //If operator is not null, then we move on to see if secondNum is being attempted to be changed
         if (operator === null){
-            //isCalc checks if we are in a chain or if no prior calculations have been done
+            //chain checks if we are in a chain or if no prior calculations have been done
             //If true, we must clear calculator to continue, otherwise we will attempt to change firstNum when it is not empty and not needing to be changed
             if(chain){
                 clear();
@@ -153,7 +153,7 @@ function operate(numOne, numTwo, op){
             break;
         
     }
-    isCalc = true;
+    chain = true;
 }
 //Reset calculator to default state
 function clear(){
@@ -161,7 +161,7 @@ function clear(){
     secondNum = '';
     operator = null;
     display.innerText = '0';
-    isCalc = false;
+    chain = false;
 }
 //Checks if any number is larger than 15, which is the maximum length of display
 function checkOverflow(){
