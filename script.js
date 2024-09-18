@@ -34,7 +34,7 @@ function btnClick(e) {
                 }
                 //Add to end of firstNum
                 firstNum += e;
-                display.innerText = firstNum;
+                display.textContent = firstNum;
                 checkOverflow();
             }
         //Checks for double '.' in secondNum
@@ -45,7 +45,7 @@ function btnClick(e) {
             }
             //Add to end of secondNum 
             secondNum += e;
-            display.innerText = secondNum;
+            display.textContent = secondNum;
             checkOverflow();
         //Invalid input will flicker display
         }else{
@@ -55,6 +55,28 @@ function btnClick(e) {
     }else{
         //Switch check for 'C' and '=', all other remaining inputs are operators which are handled by operate()
         switch(e) {
+            case '\u232B':
+                if(firstNum !== '' && operator === null){
+                    firstNum = firstNum.slice(0, -1);
+                    if (firstNum.length === 0){
+                        display.textContent = '0';
+                    }else{
+                        display.textContent = firstNum;
+                    }
+                    break;
+                }else if(secondNum != ''){
+                    secondNum = secondNum.slice(0, -1);
+                    if (secondNum.length === 0){
+                        display.textContent = '0';
+                    }else{
+                        display.textContent = secondNum;
+                    }
+                        
+                    break;
+                }else{
+                    flicker();
+                    break;
+                }
             case 'C':
                 clear();
                 break;
@@ -137,7 +159,7 @@ function operate(numOne, numTwo, op){
                 break;
             }else{
                 clear();
-                display.innerText = 'UNIVERSE END!'
+                display.textContent = 'UNIVERSE END!'
                 break;
             }
         case '+':
@@ -163,7 +185,7 @@ function clear(){
     firstNum = '';
     secondNum = '';
     operator = null;
-    display.innerText = '0';
+    display.textContent = '0';
     chain = false;
 }
 //Checks if any number is larger than 15, which is the maximum length of display
@@ -171,17 +193,17 @@ function checkOverflow(){
     firstNum = firstNum.toString();//firstNum converts to a number during calculation and thus needs to be converted back into a string. secondNum is never converted
     if(firstNum.length > 15 || secondNum.length >15){
         clear();
-        display.innerText = "OVERFLOW ERROR"
+        display.textContent = "OVERFLOW ERROR"
     }
 }
 
 //Flickers the display, used to indicate invalid button presses
 function flicker(){
-    const current = display.innerText;
+    const current = display.textContent;
     function textDisplay(){
-        display.innerText = current;
+        display.textContent = current;
     }
-    display.innerText = '';
+    display.textContent = '';
     setTimeout(textDisplay, 100);
 }
 
