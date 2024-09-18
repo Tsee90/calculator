@@ -24,13 +24,16 @@ function btnClick(e) {
                 clear();
             }
             //Checks and disallows for starting numbers with 0 (ex. 001) and multiple '.' (ex. 1.02.3)
-            if (firstNum === '' && e === '0' || firstNum.includes('.') && e === '.'){
+            if (firstNum === '0' && e === '0' || firstNum.includes('.') && e === '.'){
                 flicker();
             //All conditions for assigning or addending firstNum satisfied
             }else {
                 //Checks and adds 0 infront of empty '.'(ex. 0.1 for readability)
                 if(firstNum === '' && e === '.' || firstNum === '-' && e === '.'){
                     firstNum += '0';
+                }
+                if(firstNum === '0'){
+                    firstNum = '';
                 }
                 //Add to end of firstNum
                 firstNum += e;
@@ -43,10 +46,20 @@ function btnClick(e) {
             if(secondNum === '' && e === '.' || secondNum === '-' && e === '.'){
                 secondNum += '0';
             }
-            //Add to end of secondNum 
-            secondNum += e;
-            display.textContent = secondNum;
-            checkOverflow();
+            if(secondNum === '0' && e ==='0'){
+                flicker();
+            }else if(secondNum === '0'){
+                //Add to end of secondNum 
+                secondNum = '';
+                secondNum += e;
+                display.textContent = secondNum;
+                checkOverflow();
+            }else{
+                //Add to end of secondNum 
+                secondNum += e;
+                display.textContent = secondNum;
+                checkOverflow();
+            }
         //Invalid input will flicker display
         }else{
             flicker();
@@ -186,7 +199,7 @@ function clear(){
     firstNum = '';
     secondNum = '';
     operator = null;
-    display.textContent = '0';
+    display.textContent = '';
     chain = false;
 }
 //Checks if any number is larger than 15, which is the maximum length of display
