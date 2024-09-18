@@ -11,6 +11,7 @@ body {
 .calculator {
     height: 500px;
     width: 410px;
+    margin-top: 100px;
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
@@ -60,10 +61,33 @@ button {
     font-family: 'Courier New', Courier, monospace;
     box-shadow: 1px 1px 2px black;
     border: 2px outset;
+    background-color: rgb(196, 197, 197);
+    border-radius: 10px;
 }
 
-.delete {
+.op-btn{
+    background-color: rgb(233, 233, 101);
+    border-color: rgb(233, 233, 101);
+}
+
+.equal-btn{
+    background-color: rgb(1, 177, 1);
+    border-color: rgb(1, 177, 1);
+}
+
+.clear-btn {
+    background-color: rgb(233, 105, 101);
+    border-color: rgb(233, 105, 101);
+}
+
+.digit-btn{
+    background-color: whitesmoke;
+    border-color: whitesmoke;
+}
+.delete-btn {
     font-size: 40px;
+    background-color: rgb(243, 171, 38);
+    border-color: rgb(243, 171, 38);
 }
 .signature {
     display: flex;
