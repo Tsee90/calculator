@@ -10,17 +10,18 @@ body {
 
 .calculator {
     height: 500px;
-    width: 400px;
+    width: 410px;
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    align-items: left;
     gap: 20px;
     padding: 20px;
     background-color: antiquewhite;
     border-radius: 10px;
     box-shadow: 10px 10px 20px black;
+    border: 5px outset;
 
 }
 
@@ -28,7 +29,7 @@ body {
     box-sizing: border-box;
     background-color: white;
     height: 100px;
-    width: 350px;
+    width: auto;
     display: flex;
     justify-content: end;
     align-items: center;
@@ -37,17 +38,26 @@ body {
     font-weight: bold;
     font-family: 'Courier New', Courier, monospace;
     border-radius: 10px;
+    border-style: inset;
 }
 
+.opt-cont {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 5px;
+}
 .btn-cont{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
     gap: 5px;
 }
 
 button {
-    height: 75px;
+    height: 60px;
     width: 85px;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 1px 1px 2px black;
+    border: 2px outset;
 }
