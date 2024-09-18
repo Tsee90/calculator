@@ -55,6 +55,7 @@ function btnClick(e) {
     }else{
         //Switch check for 'C' and '=', all other remaining inputs are operators which are handled by operate()
         switch(e) {
+            //Case checks for delete button unicode u232B
             case '\u232B':
                 if(firstNum !== '' && operator === null){
                     firstNum = firstNum.slice(0, -1);

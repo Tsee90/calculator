@@ -65,3 +65,11 @@ button {
 .delete {
     font-size: 40px;
 }
+.signature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-family: 'Fascinate Inline', cursive;
+    font-size: 25px;
+}
