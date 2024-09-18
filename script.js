@@ -73,7 +73,7 @@ function btnClick(e) {
                 if(firstNum !== '' && operator === null){
                     firstNum = firstNum.slice(0, -1);
                     if (firstNum.length === 0){
-                        display.textContent = '0';
+                        display.textContent = '';
                     }else{
                         display.textContent = firstNum;
                     }
@@ -81,7 +81,7 @@ function btnClick(e) {
                 }else if(secondNum != ''){
                     secondNum = secondNum.slice(0, -1);
                     if (secondNum.length === 0){
-                        display.textContent = '0';
+                        display.textContent = '';
                     }else{
                         display.textContent = secondNum;
                     }
