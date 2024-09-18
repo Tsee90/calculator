@@ -60,7 +60,7 @@ function btnClick(e) {
                 break;
             case '=':
                 //Button will not work if any variable is missing
-                if(firstNum === '' || secondNum === '' || operator === null){
+                if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
                     flicker();
                     break;
                 }else{
@@ -69,7 +69,10 @@ function btnClick(e) {
                 }
             //'-' can be both operator and negative symbol. As such it needs to be handled with specific criteria
             case '-':
-                if (firstNum === '' && operator === null){
+                if (firstNum === '-' || secondNum === '-'){
+                    flicker();
+                    break;
+                }else if (firstNum === '' && operator === null){
                     firstNum += e;
                     display.textContent = firstNum;
                     break;
@@ -77,7 +80,7 @@ function btnClick(e) {
                     secondNum += e;
                     display.textContent = secondNum;
                     break;
-                }else if(firstNum !== '' && operator === null){
+                }else if(firstNum !== '' && operator === null && firstNum !== '-'){
                     operator = e;
                     flicker();
                     break;
@@ -93,12 +96,12 @@ function btnClick(e) {
             default:
                 //Checks if operator variable is assigned and first num is empty
                 //If true it will update the operator to the selected button text
-                if(operator === null && firstNum !== ''){
+                if(operator === null && firstNum !== '' && firstNum !== '-'){
                     operator = e;
                     flicker();
                     break;
                 //If all variables are assigned it will calculate instead
-                }else if(operator !== null && firstNum !== '' && secondNum !== ''){
+                }else if(operator !== null && firstNum !== '' && secondNum !== '' && firstNum !== '-' && secondNum !== '-'){
                     operate(firstNum, secondNum, operator);
                     operator = e; //Operator value needs to be reassigned to continue chain calculations
                     break;
