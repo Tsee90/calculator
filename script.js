@@ -2,6 +2,7 @@ let firstNum = '';
 let secondNum = '';
 let operator = null;
 let chain = false; //True if we are in a chain of calculations
+let isKeyPressed = false; //True on keydown, false on keyup
 
 //Add even listener to all buttons which returns text inside button when clicked
 const btnList = document.querySelectorAll('button');
@@ -9,7 +10,28 @@ btnList.forEach(btn => btn.addEventListener('click', (e) => btnClick(e.target.te
 
 const display = document.querySelector('.display');
 
-document.addEventListener('keydown', (e) => btnClick(e.key));
+document.addEventListener('keydown', (e) => {
+    //Checks keydown to prevent repeated triggering when key held down
+    if(!isKeyPressed){
+        isKeyPressed = true;
+        //Code below prevents default behaviors of enter key that can cause issues with the calculator
+        if (e.key === 'Enter'){
+            e.preventDefault();
+            const activeButton = document.activeElement; 
+            if (activeButton.tagName === 'BUTTON') {
+                activeButton.blur(); // Remove focus from the button if it's focused
+            }
+        }
+        btnClick(e.key);
+        highlightBtn(e.key);//Highlight key pressed
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    isKeyPressed = false;
+    unhighlightBtn(e.key);
+});
+
 
 //btnClick determines what to do based on the button text of the button that was clicked and the overall state of the global variables
 function btnClick(e) {
@@ -48,6 +70,7 @@ function btnClick(e) {
             if(secondNum === '' && e === '.' || secondNum === '-' && e === '.'){
                 secondNum += '0';
             }
+            //Checks for double zero infront
             if(secondNum === '0' && e ==='0'){
                 flicker();
             }else if(secondNum === '0' && e !== '.'){
@@ -122,6 +145,15 @@ function btnClick(e) {
                 clear();
                 break;  
             case '=':
+                //Button will not work if any variable is missing
+                if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
+                    flicker();
+                    break;
+                }else{
+                    operate(firstNum, secondNum, operator);
+                    break;
+                }
+            case 'Enter':
                 //Button will not work if any variable is missing
                 if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
                     flicker();
@@ -278,4 +310,66 @@ function round(num){
         num = roundToDecimals(num, 15 - intLength);//rounds the number to a length of 15
         return num;
     }
+}
+
+function highlightBtn(key){
+    let button = null;
+    switch (key){
+        case 'Backspace':
+            button = findButtonByText('\u232B');
+            button.classList.add('highlight');
+            break;
+        case 'Delete':
+            button = findButtonByText('C');
+            button.classList.add('highlight');
+            break;
+        case 'Enter':
+            button = findButtonByText('=');
+            button.classList.add('highlight');
+            break;
+        default:
+            button = findButtonByText(key);
+            if(button !== null){
+                button.classList.add('highlight');
+                break;
+            }else{
+                break;
+            }
+    }
+}
+
+function unhighlightBtn(key){
+    let button = null;
+    switch (key){
+        case 'Backspace':
+            button = findButtonByText('\u232B');
+            button.classList.remove('highlight');
+            break;
+        case 'Delete':
+            button = findButtonByText('C');
+            button.classList.remove('highlight');
+            break;
+        case 'Enter':
+            button = findButtonByText('=');
+            button.classList.remove('highlight');
+            break;
+        default:
+            button = findButtonByText(key);
+            if(button !== null){
+                button.classList.remove('highlight');
+                break;
+            }else{
+                break;
+            }
+    }
+}
+
+function findButtonByText(text) {
+    const buttons = document.querySelectorAll('button'); 
+    for (const button of buttons) {
+        if (button.textContent.trim() === text) { 
+            return button; 
+        }
+    }
+    return null;
 }
