@@ -28,12 +28,12 @@ function btnClick(e) {
                 flicker();
             //All conditions for assigning or addending firstNum satisfied
             }else {
+                if(firstNum === '0' && e !== '.'){
+                    firstNum = '';
+                }
                 //Checks and adds 0 infront of empty '.'(ex. 0.1 for readability)
                 if(firstNum === '' && e === '.' || firstNum === '-' && e === '.'){
                     firstNum += '0';
-                }
-                if(firstNum === '0'){
-                    firstNum = '';
                 }
                 //Add to end of firstNum
                 firstNum += e;
@@ -48,7 +48,7 @@ function btnClick(e) {
             }
             if(secondNum === '0' && e ==='0'){
                 flicker();
-            }else if(secondNum === '0'){
+            }else if(secondNum === '0' && e !== '.'){
                 //Add to end of secondNum 
                 secondNum = '';
                 secondNum += e;
