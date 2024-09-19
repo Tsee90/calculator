@@ -9,6 +9,8 @@ btnList.forEach(btn => btn.addEventListener('click', (e) => btnClick(e.target.te
 
 const display = document.querySelector('.display');
 
+document.addEventListener('keydown', (e) => btnClick(e.key));
+
 //btnClick determines what to do based on the button text of the button that was clicked and the overall state of the global variables
 function btnClick(e) {
     //Checks if button text is integer or '.'
@@ -112,7 +114,7 @@ function btnClick(e) {
                     firstNum += e;
                     display.textContent = firstNum;
                     break;
-                }else if(operator !== null && secondNum === ''){
+                }else if(operator !== null && firstNum !== ''){
                     secondNum += e;
                     display.textContent = secondNum;
                     break;
