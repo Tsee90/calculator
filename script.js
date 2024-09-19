@@ -93,9 +93,34 @@ function btnClick(e) {
                     flicker();
                     break;
                 }
+            case 'Backspace':
+                if(firstNum !== '' && operator === null){
+                    firstNum = firstNum.slice(0, -1);
+                    if (firstNum.length === 0){
+                        display.textContent = '';
+                    }else{
+                        display.textContent = firstNum;
+                    }
+                    break;
+                }else if(secondNum != ''){
+                    secondNum = secondNum.slice(0, -1);
+                    if (secondNum.length === 0){
+                        display.textContent = '';
+                    }else{
+                        display.textContent = secondNum;
+                    }
+                        
+                    break;
+                }else{
+                    flicker();
+                    break;
+                }
             case 'C':
                 clear();
                 break;
+            case 'Delete':
+                clear();
+                break;  
             case '=':
                 //Button will not work if any variable is missing
                 if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
@@ -115,14 +140,19 @@ function btnClick(e) {
                     display.textContent = firstNum;
                     break;
                 }else if(operator !== null && firstNum !== ''){
-                    if(e === '-' && secondNum === ''){  
+                    if(secondNum === ''){  
                         secondNum += e;
                         display.textContent = secondNum;
                         break;
-                    }else if (e === '-' && secondNum !== ''){
+                    }else if (secondNum !== '' && secondNum === '-'){
                         flicker();
                         break;
-                    }else{
+                    }else if (secondNum !== '' && secondNum !== '-'){
+                        operate(firstNum, secondNum, operator);
+                        operator = e; //Operator value needs to be reassigned to continue chain calculations
+                        break;
+                    }
+                    else{
                         secondNum += e;
                         display.textContent = secondNum;
                         break;
