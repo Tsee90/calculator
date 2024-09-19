@@ -2,9 +2,10 @@
    Calculator for The Odin Project lesson
    Coded by: Theo See aka Tsee90 
 */
+//Set global Variables
 let firstNum = '';
 let secondNum = '';
-let operator = null;
+let operator = null; //+ - / *
 let chain = false; //True if we are in a chain of calculations
 let isKeyPressed = false; //True on keydown, false on keyup
 
@@ -102,7 +103,7 @@ function btnClick(e) {
         }
     //When button text is not integer or '.' we move into else
     }else{
-        //Switch check for 'C' and '=', all other remaining inputs are operators which are handled by operate()
+        //Switch check for remaining button options
         switch(e) {
             //Case checks for delete button unicode u232B and Backspace
             case '\u232B':
