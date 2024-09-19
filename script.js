@@ -221,8 +221,9 @@ function btnClick(e) {
                     flickerOp();
                     break;
                 }
-            //All default buttons are operators
-            default:
+            case '/':
+            case '*':
+            case '+':
                 //Checks if operator variable is assigned and first num is empty
                 //If true it will update the operator to the selected button text
                 if(operator === null && firstNum !== '' && firstNum !== '-'){
@@ -253,6 +254,8 @@ function btnClick(e) {
                     }
                     break;
                 }
+            default:
+                break;
         }
     }
     
