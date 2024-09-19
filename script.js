@@ -79,7 +79,7 @@ function btnClick(e) {
                 secondNum += e;
                 display.textContent = secondNum;
                 checkOverflow();
-                if(secondNum === firstNum){
+                if(secondNum === firstNum && secondNum.length === 1){
                     flicker();
                 }
             }else{
@@ -87,7 +87,7 @@ function btnClick(e) {
                 secondNum += e;
                 display.textContent = secondNum;
                 checkOverflow();
-                if(secondNum === firstNum){
+                if(secondNum === firstNum && secondNum.length === 1){
                     flicker();
                 }
             }
@@ -128,7 +128,7 @@ function btnClick(e) {
                     }
                     break;
                 }else {
-                    flicker();
+                    flickerOp();
                     break;
                 }
             case 'C':
@@ -136,19 +136,14 @@ function btnClick(e) {
                 clear();
                 break;  
             case '=':
-                //Button will not work if any variable is missing
-                if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
-                    flicker();
-                    break;
-                }else{
-                    operate(firstNum, secondNum, operator);
-                    opDisplay.textContent = e;
-                    break;
-                }
             case 'Enter':
                 //Button will not work if any variable is missing
                 if(firstNum === '' || secondNum === '' || operator === null || firstNum === '-' || secondNum === '-'){
-                    flicker();
+                    if(chain){
+                        flickerOp();
+                    }else{
+                        flicker();
+                    }
                     break;
                 }else{
                     operate(firstNum, secondNum, operator);
@@ -164,10 +159,10 @@ function btnClick(e) {
                     firstNum += e;
                     display.textContent = firstNum;
                     break;
-                }else if(operator !== null && firstNum !== ''){
+                }else if(operator !== null && firstNum !== '' && operator !== '-'){
                     if(secondNum === ''){  
                         secondNum += e;
-                        display.textContent = secondNum;
+                        display.textContent = e;
                         break;
                     }else if (secondNum !== '' && secondNum === '-'){
                         flicker();
@@ -175,7 +170,11 @@ function btnClick(e) {
                     }else if (secondNum !== '' && secondNum !== '-'){
                         operate(firstNum, secondNum, operator);
                         operator = e; //Operator value needs to be reassigned to continue chain calculations
-                        opDisplay.textContent = e;
+                        if(chain){
+                            opDisplay.textContent = '=' + e;
+                        }else{
+                            opDisplay.textContent = e;
+                        }
                         break;
                     }
                     else{
@@ -185,15 +184,23 @@ function btnClick(e) {
                     }
                 }else if(firstNum !== '' && operator === null && firstNum !== '-'){
                     operator = e;
-                    opDisplay.textContent = e;
+                    if(chain){
+                        opDisplay.textContent = '=' + e;
+                    }else{
+                        opDisplay.textContent = e;
+                    }
                     break;
                 }else if(firstNum !== '' && operator !== null && secondNum !== ''){
                     operate(firstNum, secondNum, operator);
                     operator = e; //Operator value needs to be reassigned to continue chain calculations
-                    opDisplay.textContent = e;
+                    if(chain){
+                        opDisplay.textContent = '=' + e;
+                    }else{
+                        opDisplay.textContent = e;
+                    }
                     break;
                 }else{
-                    flicker();
+                    flickerOp();
                     break;
                 }
             //All default buttons are operators
@@ -202,16 +209,24 @@ function btnClick(e) {
                 //If true it will update the operator to the selected button text
                 if(operator === null && firstNum !== '' && firstNum !== '-'){
                     operator = e;
-                    opDisplay.textContent = e;
+                    if(chain){
+                        opDisplay.textContent = '=' + e;
+                    }else{
+                        opDisplay.textContent = e;
+                    }
                     break;
                 //If all variables are assigned it will calculate instead
                 }else if(operator !== null && firstNum !== '' && secondNum !== '' && firstNum !== '-' && secondNum !== '-'){
                     operate(firstNum, secondNum, operator);
                     operator = e; //Operator value needs to be reassigned to continue chain calculations
-                    opDisplay.textContent = e;
+                    if(chain){
+                        opDisplay.textContent = '=' + e;
+                    }else{
+                        opDisplay.textContent = e;
+                    }
                     break;
                 }else{
-                    flicker();
+                    flickerOp();
                     break;
                 }
         }
@@ -288,6 +303,16 @@ function flicker(){
         display.textContent = current;
     }
     display.textContent = '';
+    setTimeout(textDisplay, 100);
+}
+
+
+function flickerOp(){
+    const current = opDisplay.textContent;
+    function textDisplay(){
+        opDisplay.textContent = current;
+    }
+    opDisplay.textContent = '';
     setTimeout(textDisplay, 100);
 }
 
