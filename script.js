@@ -118,7 +118,9 @@ function btnClick(e) {
                 }else if(secondNum != ''){
                     secondNum = secondNum.slice(0, -1);
                     if (secondNum.length === 0){
-                        display.textContent = '';
+                        display.textContent = firstNum;
+                        flicker();
+                        flickerOp();
                     }else{
                         display.textContent = secondNum;
                     }
@@ -244,7 +246,11 @@ function btnClick(e) {
                     }
                     break;    
                 }else{
-                    flickerOp();
+                    if(firstNum === '-' || secondNum === '-'){
+                        flicker();
+                    }else{
+                        flickerOp();
+                    }
                     break;
                 }
         }
