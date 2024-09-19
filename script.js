@@ -1,3 +1,7 @@
+/*
+   Calculator for The Odin Project lesson
+   Coded by: Theo See aka Tsee90 
+*/
 let firstNum = '';
 let secondNum = '';
 let operator = null;
@@ -8,6 +12,7 @@ let isKeyPressed = false; //True on keydown, false on keyup
 const btnList = document.querySelectorAll('button');
 btnList.forEach(btn => btn.addEventListener('click', (e) => btnClick(e.target.textContent)));
 
+//Set display variables
 const display = document.querySelector('.num-display');
 const opDisplay = document.querySelector('.op-display');
 
@@ -21,12 +26,12 @@ document.addEventListener('keydown', (e) => {
         if (activeButton.tagName === 'BUTTON') {
             activeButton.blur(); // Remove focus from the button if it's focused
         }
-    
         btnClick(e.key);
         highlightBtn(e.key);//Highlight key pressed
     }
 });
 
+//Keyup removes highlight
 document.addEventListener('keyup', (e) => {
     isKeyPressed = false;
     unhighlightBtn(e.key);
@@ -99,7 +104,7 @@ function btnClick(e) {
     }else{
         //Switch check for 'C' and '=', all other remaining inputs are operators which are handled by operate()
         switch(e) {
-            //Case checks for delete button unicode u232B
+            //Case checks for delete button unicode u232B and Backspace
             case '\u232B':
             case 'Backspace':
                 if(firstNum !== '' && operator === null && !chain){
@@ -146,20 +151,23 @@ function btnClick(e) {
                     }
                     break;
                 }else{
-                    operate(firstNum, secondNum, operator);
                     opDisplay.textContent = '=';
+                    operate(firstNum, secondNum, operator);
                     break;
                 }
             //'-' can be both operator and negative symbol. As such it needs to be handled with specific criteria
             case '-':
+                //First checks if - is already in display
                 if (firstNum === '-' || secondNum === '-'){
                     flicker();
                     break;
+                //Add - to display if all things empty
                 }else if (firstNum === '' && operator === null){
                     firstNum += e;
                     display.textContent = firstNum;
                     break;
-                }else if(operator !== null && firstNum !== '' && operator !== '-'){
+                //Checks if attempting to change secondNum
+                }else if(operator !== null && firstNum !== ''){
                     if(secondNum === ''){  
                         secondNum += e;
                         display.textContent = e;
@@ -169,11 +177,14 @@ function btnClick(e) {
                         break;
                     }else if (secondNum !== '' && secondNum !== '-'){
                         operate(firstNum, secondNum, operator);
-                        operator = e; //Operator value needs to be reassigned to continue chain calculations
-                        if(chain){
+                        //Check for divide by zero
+                        if(display.textContent !== 'IMPLOSION!'){
+                            if(chain){
                             opDisplay.textContent = '=' + e;
-                        }else{
+                            }else{
                             opDisplay.textContent = e;
+                            }
+                            operator = e; //Operator value needs to be reassigned to continue chain calculations
                         }
                         break;
                     }
@@ -182,6 +193,7 @@ function btnClick(e) {
                         display.textContent = secondNum;
                         break;
                     }
+                //Checks if - will be used as operator
                 }else if(firstNum !== '' && operator === null && firstNum !== '-'){
                     operator = e;
                     if(chain){
@@ -190,15 +202,19 @@ function btnClick(e) {
                         opDisplay.textContent = e;
                     }
                     break;
+                //Calculate if conditions met
                 }else if(firstNum !== '' && operator !== null && secondNum !== ''){
                     operate(firstNum, secondNum, operator);
-                    operator = e; //Operator value needs to be reassigned to continue chain calculations
-                    if(chain){
+                    if(display.textContent !== 'IMPLOSION!'){
+                        if(chain){
                         opDisplay.textContent = '=' + e;
-                    }else{
+                        }else{
                         opDisplay.textContent = e;
+                        }
+                        operator = e; //Operator value needs to be reassigned to continue chain calculations
                     }
                     break;
+                //All cases fail
                 }else{
                     flickerOp();
                     break;
@@ -218,13 +234,15 @@ function btnClick(e) {
                 //If all variables are assigned it will calculate instead
                 }else if(operator !== null && firstNum !== '' && secondNum !== '' && firstNum !== '-' && secondNum !== '-'){
                     operate(firstNum, secondNum, operator);
-                    operator = e; //Operator value needs to be reassigned to continue chain calculations
-                    if(chain){
+                    if(display.textContent !== 'IMPLOSION!'){
+                        if(chain){
                         opDisplay.textContent = '=' + e;
-                    }else{
+                        }else{
                         opDisplay.textContent = e;
+                        }
+                        operator = e; //Operator value needs to be reassigned to continue chain calculations
                     }
-                    break;
+                    break;    
                 }else{
                     flickerOp();
                     break;
@@ -233,6 +251,7 @@ function btnClick(e) {
     }
     
 }
+
 //operate() accepts two numbers and an operator: +, -, *, /
 function operate(numOne, numTwo, op){
     numOne = parseFloat(numOne);
@@ -245,6 +264,7 @@ function operate(numOne, numTwo, op){
             secondNum = '';
             operator = null;
             display.innerHTML = firstNum;
+            chain = true;
             checkOverflow();
             break;
         case '/':
@@ -253,6 +273,7 @@ function operate(numOne, numTwo, op){
                 secondNum = '';
                 operator = null;
                 display.innerHTML = firstNum;
+                chain = true;
                 checkOverflow();
                 break;
             }else{
@@ -265,6 +286,7 @@ function operate(numOne, numTwo, op){
             secondNum = '';
             operator = null;
             display.innerHTML = firstNum;
+            chain = true;
             checkOverflow();
             break;
         case '-':
@@ -272,12 +294,12 @@ function operate(numOne, numTwo, op){
             secondNum = '';
             operator = null;
             display.innerHTML = firstNum;
+            chain = true;
             checkOverflow();
             break;
-        
     }
-    chain = true;
 }
+
 //Reset calculator to default state
 function clear(){
     firstNum = '';
@@ -287,6 +309,7 @@ function clear(){
     chain = false;
     opDisplay.textContent = '';
 }
+
 //Checks if any number is larger than 15, which is the maximum length of display
 function checkOverflow(){
     firstNum = firstNum.toString();//firstNum converts to a number during calculation and thus needs to be converted back into a string. secondNum is never converted
@@ -306,7 +329,7 @@ function flicker(){
     setTimeout(textDisplay, 100);
 }
 
-
+//Flickers operation display
 function flickerOp(){
     const current = opDisplay.textContent;
     function textDisplay(){
@@ -334,6 +357,7 @@ function round(num){
     }
 }
 
+//Highlight button on keydown
 function highlightBtn(key){
     let button = null;
     switch (key){
@@ -360,6 +384,7 @@ function highlightBtn(key){
     }
 }
 
+//Remove highlight on keyup
 function unhighlightBtn(key){
     let button = null;
     switch (key){
@@ -386,6 +411,7 @@ function unhighlightBtn(key){
     }
 }
 
+//Supports highlighter functions
 function findButtonByText(text) {
     const buttons = document.querySelectorAll('button'); 
     for (const button of buttons) {
