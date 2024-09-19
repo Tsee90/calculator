@@ -115,9 +115,18 @@ function btnClick(e) {
                     display.textContent = firstNum;
                     break;
                 }else if(operator !== null && firstNum !== ''){
-                    secondNum += e;
-                    display.textContent = secondNum;
-                    break;
+                    if(e === '-' && secondNum === ''){  
+                        secondNum += e;
+                        display.textContent = secondNum;
+                        break;
+                    }else if (e === '-' && secondNum !== ''){
+                        flicker();
+                        break;
+                    }else{
+                        secondNum += e;
+                        display.textContent = secondNum;
+                        break;
+                    }
                 }else if(firstNum !== '' && operator === null && firstNum !== '-'){
                     operator = e;
                     flicker();
