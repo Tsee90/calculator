@@ -8,7 +8,8 @@ let isKeyPressed = false; //True on keydown, false on keyup
 const btnList = document.querySelectorAll('button');
 btnList.forEach(btn => btn.addEventListener('click', (e) => btnClick(e.target.textContent)));
 
-const display = document.querySelector('.display');
+const display = document.querySelector('.num-display');
+const opDisplay = document.querySelector('.op-display');
 
 document.addEventListener('keydown', (e) => {
     //Checks keydown to prevent repeated triggering when key held down
@@ -78,11 +79,17 @@ function btnClick(e) {
                 secondNum += e;
                 display.textContent = secondNum;
                 checkOverflow();
+                if(secondNum === firstNum){
+                    flicker();
+                }
             }else{
                 //Add to end of secondNum 
                 secondNum += e;
                 display.textContent = secondNum;
                 checkOverflow();
+                if(secondNum === firstNum){
+                    flicker();
+                }
             }
         //Invalid input will flicker display
         }else{
@@ -94,29 +101,8 @@ function btnClick(e) {
         switch(e) {
             //Case checks for delete button unicode u232B
             case '\u232B':
-                if(firstNum !== '' && operator === null){
-                    firstNum = firstNum.slice(0, -1);
-                    if (firstNum.length === 0){
-                        display.textContent = '';
-                    }else{
-                        display.textContent = firstNum;
-                    }
-                    break;
-                }else if(secondNum != ''){
-                    secondNum = secondNum.slice(0, -1);
-                    if (secondNum.length === 0){
-                        display.textContent = '';
-                    }else{
-                        display.textContent = secondNum;
-                    }
-                        
-                    break;
-                }else{
-                    flicker();
-                    break;
-                }
             case 'Backspace':
-                if(firstNum !== '' && operator === null){
+                if(firstNum !== '' && operator === null && !chain){
                     firstNum = firstNum.slice(0, -1);
                     if (firstNum.length === 0){
                         display.textContent = '';
@@ -133,13 +119,19 @@ function btnClick(e) {
                     }
                         
                     break;
-                }else{
+                }else if(secondNum === '' && operator !== null){
+                    operator = null;
+                    display.textContent = firstNum;
+                    opDisplay.textContent = '';
+                    if(chain){
+                        opDisplay.textContent = '=';
+                    }
+                    break;
+                }else {
                     flicker();
                     break;
                 }
             case 'C':
-                clear();
-                break;
             case 'Delete':
                 clear();
                 break;  
@@ -150,6 +142,7 @@ function btnClick(e) {
                     break;
                 }else{
                     operate(firstNum, secondNum, operator);
+                    opDisplay.textContent = e;
                     break;
                 }
             case 'Enter':
@@ -159,6 +152,7 @@ function btnClick(e) {
                     break;
                 }else{
                     operate(firstNum, secondNum, operator);
+                    opDisplay.textContent = '=';
                     break;
                 }
             //'-' can be both operator and negative symbol. As such it needs to be handled with specific criteria
@@ -181,6 +175,7 @@ function btnClick(e) {
                     }else if (secondNum !== '' && secondNum !== '-'){
                         operate(firstNum, secondNum, operator);
                         operator = e; //Operator value needs to be reassigned to continue chain calculations
+                        opDisplay.textContent = e;
                         break;
                     }
                     else{
@@ -190,11 +185,12 @@ function btnClick(e) {
                     }
                 }else if(firstNum !== '' && operator === null && firstNum !== '-'){
                     operator = e;
-                    flicker();
+                    opDisplay.textContent = e;
                     break;
                 }else if(firstNum !== '' && operator !== null && secondNum !== ''){
                     operate(firstNum, secondNum, operator);
                     operator = e; //Operator value needs to be reassigned to continue chain calculations
+                    opDisplay.textContent = e;
                     break;
                 }else{
                     flicker();
@@ -206,12 +202,13 @@ function btnClick(e) {
                 //If true it will update the operator to the selected button text
                 if(operator === null && firstNum !== '' && firstNum !== '-'){
                     operator = e;
-                    flicker();
+                    opDisplay.textContent = e;
                     break;
                 //If all variables are assigned it will calculate instead
                 }else if(operator !== null && firstNum !== '' && secondNum !== '' && firstNum !== '-' && secondNum !== '-'){
                     operate(firstNum, secondNum, operator);
                     operator = e; //Operator value needs to be reassigned to continue chain calculations
+                    opDisplay.textContent = e;
                     break;
                 }else{
                     flicker();
@@ -245,7 +242,7 @@ function operate(numOne, numTwo, op){
                 break;
             }else{
                 clear();
-                display.textContent = 'UNIVERSE END!'
+                display.textContent = 'IMPLOSION!'
                 break;
             }
         case '+':
@@ -273,6 +270,7 @@ function clear(){
     operator = null;
     display.textContent = '';
     chain = false;
+    opDisplay.textContent = '';
 }
 //Checks if any number is larger than 15, which is the maximum length of display
 function checkOverflow(){
