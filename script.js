@@ -15,13 +15,12 @@ document.addEventListener('keydown', (e) => {
     if(!isKeyPressed){
         isKeyPressed = true;
         //Code below prevents default behaviors of enter key that can cause issues with the calculator
-        if (e.key === 'Enter'){
-            e.preventDefault();
-            const activeButton = document.activeElement; 
-            if (activeButton.tagName === 'BUTTON') {
-                activeButton.blur(); // Remove focus from the button if it's focused
-            }
+        e.preventDefault();
+        const activeButton = document.activeElement; 
+        if (activeButton.tagName === 'BUTTON') {
+            activeButton.blur(); // Remove focus from the button if it's focused
         }
+    
         btnClick(e.key);
         highlightBtn(e.key);//Highlight key pressed
     }
